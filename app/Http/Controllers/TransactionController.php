@@ -44,14 +44,22 @@ class TransactionController extends Controller
     {
         $client = Client::findOrFail($request->client_id);
 
-        Transaction::create([
-            'client_id' => $request->client_id,
-            'user_id' => auth()->id(),
-            'day' => $request->day,
-            'month' => $request->month,
-            'year' => $request->year,
-            'amount' => $client->internet_package->price,
-        ]);
+       $transactionData = [
+        'client_id' => $request->client_id,
+        'user_id' => auth()->id(),
+        'day' => $request->day,
+        'month' => $request->month,
+        'year' => $request->year,
+        'amount' => $client->internet_package->price,
+        'status' => $request->status,
+        ];
+
+        // Hanya set created_at jika status Lunas
+        if ($request->status === 'Lunas') {
+            $transactionData['created_at'] = Carbon::createFromDate($request->year, $request->month, $request->day);
+        }
+
+        $transaction = Transaction::create($transactionData);
 
         return redirect()->route('tagihan.index')->with('success', 'Data berhasil ditambahkan!');
     }
