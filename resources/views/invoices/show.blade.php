@@ -256,19 +256,20 @@
                     email: email
                 },
                 success: function (data) {
+                    let id = data.id;
+                    let orderId = data.orderId;
                     snap.pay(data.token, {
                         onSuccess: function(result) {
-                            alert("Pembayaran sukses!");
                             console.log(result);
-                            window.location.href = "/client/pembayaran/"+orderId;
+                            window.location.href = "/client/pembayaran/"+id+"/"+orderId;
                         },
                         onPending: function(result) {
-                            alert("Menunggu pembayaran!");
                             console.log(result);
+                            window.location.href = "/client/tagihan";
                         },
                         onError: function(result) {
-                            alert("Pembayaran gagal!");
                             console.log(result);
+                            window.location.href = "/client/tagihan";
                         }
                     });
                 }

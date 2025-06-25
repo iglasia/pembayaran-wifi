@@ -23,5 +23,5 @@ Route::middleware('auth.client')->group(function () {
     Route::get('bayar/{id}', [ClientBillingController::class, 'bayar'])->name('bayar');
     Route::get('invoice/{id}', [ClientBillingController::class, 'invoice'])->name('invoice');
     Route::post('pembayaran', [ClientPaymentController::class, 'token'])->name('pembayaran');
-    Route::get('pembayaran/{id}', [ClientPaymentController::class, 'pembayaranSukses'])->name('pembayaran-sukses');
+    Route::get('pembayaran/{id}/{orderId}', [ClientPaymentController::class, 'pembayaranSukses'])->name('pembayaran-sukses');
 });

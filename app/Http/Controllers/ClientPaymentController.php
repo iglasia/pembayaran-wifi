@@ -23,7 +23,8 @@ class ClientPaymentController extends Controller
         Config::$isSanitized = config('midtrans.isSanitized');
         Config::$is3ds = config('midtrans.is3ds');
 
-        $orderId = $request->input('order_id');
+        $id = $request->input('order_id');
+        $orderId = $request->input('order_id')."-".time();
         $grossAmount = $request->input('gross_amount');
         $firstName = $request->input('first_name');
         $email = $request->input('email');
@@ -38,15 +39,21 @@ class ClientPaymentController extends Controller
                 'first_name' => $firstName,
                 'email' => $email,
             ],
+            'expiry' => [
+                'start_time' => date("Y-m-d H:i:s O"),
+                'unit' => 'second',
+                'duration' => 21
+            ]
         ];
 
         $snapToken = Snap::getSnapToken($params);
-        return response()->json(['token' => $snapToken]);
+        return response()->json(['token' => $snapToken, 'id'=>$id, 'orderId' => $orderId]);
     }
 
-    public function pembayaranSukses($id){
+    public function pembayaranSukses($id, $orderId){
         $transaction = Transaction::findOrFail($id);
         $transaction->status = "Lunas";
+        $transaction->order_id = $orderId;
         $transaction->save();
         return redirect('/client/tagihan');
 
