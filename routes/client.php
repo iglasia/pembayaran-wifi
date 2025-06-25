@@ -13,9 +13,6 @@ Route::get('login', [ClientAuthController::class, 'showLoginForm'])->name('login
 Route::post('login', [ClientAuthController::class, 'store'])->name('login.store');
 Route::post('logout', [ClientAuthController::class, 'logout'])->name('logout');
 
-Route::get('/payment', [ClientPaymentController::class, 'index']);
-Route::post('/payment/token', [ClientPaymentController::class, 'token']);
-
 // Rute yang memerlukan login klien
 Route::middleware('auth.client')->group(function () {
     Route::get('dashboard', [ClientDashboardController::class, 'index'])->name('dashboard');
