@@ -23,7 +23,7 @@ class ClientPaymentController extends Controller
         Config::$isSanitized = config('midtrans.isSanitized');
         Config::$is3ds = config('midtrans.is3ds');
 
-        $orderId = $request->input('order_id');
+        $orderId = $request->input('order_id').'-'.time(); // Menggunakan order_id dari input dan menambahkan timestamp untuk unik
         $grossAmount = $request->input('gross_amount');
         $firstName = $request->input('first_name');
         $email = $request->input('email');
