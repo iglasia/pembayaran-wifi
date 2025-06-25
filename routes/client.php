@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClientAuthController;
 use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\ClientBillingController;
+use App\Http\Controllers\ClientPaymentController;
 use App\Http\Controllers\ClientPaymentHistoryController;
 use App\Http\Controllers\ClientSettingsController;
 use Illuminate\Support\Facades\Route;
@@ -11,6 +12,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('login', [ClientAuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [ClientAuthController::class, 'store'])->name('login.store');
 Route::post('logout', [ClientAuthController::class, 'logout'])->name('logout');
+
+Route::get('/payment', [ClientPaymentController::class, 'index']);
+Route::post('/payment/token', [ClientPaymentController::class, 'token']);
 
 // Rute yang memerlukan login klien
 Route::middleware('auth.client')->group(function () {
@@ -21,4 +25,6 @@ Route::middleware('auth.client')->group(function () {
     Route::put('pengaturan', [ClientSettingsController::class, 'update'])->name('settings.update');
     Route::get('bayar/{id}', [ClientBillingController::class, 'bayar'])->name('bayar');
     Route::get('invoice/{id}', [ClientBillingController::class, 'invoice'])->name('invoice');
+    Route::post('pembayaran', [ClientPaymentController::class, 'token'])->name('pembayaran');
+    Route::get('pembayaran/{id}', [ClientPaymentController::class, 'pembayaranSukses'])->name('pembayaran-sukses');
 });

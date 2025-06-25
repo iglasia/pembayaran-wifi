@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Invoice #{{ $transaction->id }}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -113,6 +114,10 @@
 </head>
 
 <body>
+    <input type="hidden" id="order-id" value="{{ $transaction->id  }}">
+    <input type="hidden" id="gross-amount" value="{{ $transaction->amount }}">
+    <input type="hidden" id="fullname" value="{{ $transaction->client->name  }}">
+    <input type="hidden" id="email" value="{{ $transaction->client->email }}">
 
     <div class="print-button-container">
         @if ($transaction->status == 'Lunas')
@@ -120,7 +125,7 @@
                 <i class="fas fa-print"></i> Cetak Invoice
             </button>
         @else
-            <button class="btn btn-primary" onclick="">
+            <button class="btn btn-primary"  id="pay-button">
                 <i class="fas fa-print"></i> Bayar Invoice
             </button>
         @endif
@@ -224,6 +229,53 @@
         </div>
     </div>
 
+
+
 </body>
 
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.clientKey') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        $('#pay-button').click(function (event) {
+            event.preventDefault();
+            let orderId = $('#order-id').val();
+            let grossAmount = $('#gross-amount').val();
+            let firstName = $('#fullname').val();
+            let email = $('#email').val();
+            $.ajax({
+                url: '/client/pembayaran',
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    order_id: orderId,
+                    gross_amount: grossAmount,
+                    first_name: name,
+                    email: email
+                },
+                success: function (data) {
+                    snap.pay(data.token, {
+                        onSuccess: function(result) {
+                            alert("Pembayaran sukses!");
+                            console.log(result);
+                            window.location.href = "/client/pembayaran/"+orderId;
+                        },
+                        onPending: function(result) {
+                            alert("Menunggu pembayaran!");
+                            console.log(result);
+                        },
+                        onError: function(result) {
+                            alert("Pembayaran gagal!");
+                            console.log(result);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
 </html>
+
+
