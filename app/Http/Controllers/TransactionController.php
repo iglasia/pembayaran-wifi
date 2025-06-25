@@ -62,7 +62,7 @@ class TransactionController extends Controller
             $transactionData['created_at'] = $transactionDate;
             
             // Generate order_id dengan tanggal transaksi
-            $transactionData['order_id'] = $this->getIncrementTransactionId($transactionDate->format('Y-m-d'));
+            $transactionData['order_id'] = $this->getIncrementTransactionId($request->client_id, $request->month);
 
         }
 
@@ -99,7 +99,7 @@ class TransactionController extends Controller
             
             // Generate order_id baru jika sebelumnya belum Lunas
             if ($transaction->status !== 'Lunas') {
-                $transactionData['order_id'] = $this->getIncrementTransactionId($transactionDate->format('Y-m-d'));
+                $transactionData['order_id'] = $this->getIncrementTransactionId($request->client_id, $request->month);
             }
         } else {
             // Reset jika status diubah dari Lunas ke non-Lunas
@@ -135,18 +135,17 @@ class TransactionController extends Controller
  * @param string|null $date Tanggal transaksi (format Y-m-d), null untuk hari ini
  * @return string
  */
-   protected function getIncrementTransactionId()
+   protected function getIncrementTransactionId($clientId,$month)
     {
         // Ambil ID terakhir
-        $lastTransaction = Transaction::orderBy('id', 'desc')->first();
-        
-        // Hitung increment (ID terakhir + 1, atau mulai dari 1 jika tidak ada data)
-        $increment = $lastTransaction ? $lastTransaction->id + 1 : 1;
-        
+        $lastTransaction = Transaction::where('client_id', $clientId)
+            ->where('month', $month)
+            ->first();
+
         // Ambil timestamp saat ini
         $timestamp = time();
         
         // Gabungkan increment dan timestamp
-        return $increment . '-' . $timestamp;
+        return $lastTransaction->id . '-' . $timestamp;
     }
 }
