@@ -24,7 +24,10 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with('client', 'user')->select('id', 'client_id', 'user_id', 'day', 'month', 'year')->latest()->get();
+        $transactions = Transaction::with('client', 'user')
+        ->select('id', 'client_id', 'user_id', 'day', 'month', 'year','status')
+        ->orderBy('created_at', 'asc')
+        ->get();
 
         $clients = Client::select('id', 'name', 'ip_address')->orderBy('name')->get();
 
@@ -75,14 +78,29 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::findOrFail($id);
 
-        $transaction->update([
+        $transactionData = [
             'client_id' => $request->client_id,
             'user_id' => auth()->id(),
             'day' => $request->day,
             'month' => $request->month,
             'year' => $request->year,
-            'amount' => $transaction->client->internet_package->price
-        ]);
+            'amount' => $transaction->client->internet_package->price,
+            'status' => $request->status // tambahkan status ke data yang diupdate
+        ];
+
+        // Jika status Lunas, set created_at
+        if ($request->status === 'Lunas') {
+            $transactionData['created_at'] = Carbon::createFromDate(
+                $request->year, 
+                $request->month, 
+                $request->day
+            );
+        } else {
+            // Jika status bukan Lunas, set created_at menjadi null
+            $transactionData['created_at'] = null;
+        }
+
+        $transaction->update($transactionData);
 
         return redirect()->route('tagihan.index')->with('success', 'Data berhasil diubah!');
     }

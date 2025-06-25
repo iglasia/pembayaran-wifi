@@ -56,6 +56,7 @@ class Client extends Authenticatable
 
     public function payments()
     {
-        return $this->hasMany(Transaction::class, 'client_id', 'id');
+        return $this->hasMany(Transaction::class, 'client_id', 'id')
+                    ->whereNotNull('created_at');
     }
 }

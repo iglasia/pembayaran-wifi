@@ -40,39 +40,51 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 col-lg-4">
+                        <div class="col-md-12 col-lg-3">
                             <div class="form-group">
                                 <label for="day">Hari</label>
                                 <select class="form-control" name="day" id="day">
                                     <option>Pilih..</option>
-                                    @foreach (range(1,31) as $day)
-                                    <option value="{{ sprintf('%02d', $day) }}"
-                                        {{ sprintf('%02d', $day) === date('d') ? 'selected' : '' }}>
-                                        {{ sprintf('%02d', $day) }}</option>
+                                    @foreach (range(1, 31) as $day)
+                                        <option value="{{ sprintf('%02d', $day) }}"
+                                            {{ sprintf('%02d', $day) === date('d') ? 'selected' : '' }}>
+                                            {{ sprintf('%02d', $day) }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-12 col-lg-4">
+                        <div class="col-md-12 col-lg-3">
                             <div class="form-group">
                                 <label for="month">Bulan</label>
                                 <select class="form-control" name="month" id="month">
                                     <option>Pilih..</option>
                                     @foreach (range(1, 12) as $month)
-                                    <option value="{{ sprintf('%02d', $month) }}"
-                                        {{ sprintf('%02d', $month) === date('m') ? 'selected' : '' }}>
-                                        {{ sprintf('%02d', $month) }}</option>
+                                        <option value="{{ sprintf('%02d', $month) }}"
+                                            {{ sprintf('%02d', $month) === date('m') ? 'selected' : '' }}>
+                                            {{ sprintf('%02d', $month) }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-12 col-lg-4">
+                        <div class="col-md-12 col-lg-3">
                             <div class="form-group">
                                 <label for="year">Tahun</label>
                                 <input type="number" class="form-control" name="year" id="year"
                                     placeholder="Masukkan tahun">
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-3">
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select class="form-control" name="status" id="status">
+                                    <option value="Belum Lunas"
+                                        {{ $transaction->status == 'Belum Lunas' ? 'selected' : '' }}>Belum Lunas
+                                    </option>
+                                    <option value="Lunas" {{ $transaction->status == 'Lunas' ? 'selected' : '' }}>Lunas
+                                    </option>
+                                </select>
                             </div>
                         </div>
                     </div>

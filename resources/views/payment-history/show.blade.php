@@ -65,7 +65,7 @@
                             @forelse ($client->payments as $payment)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $payment->created_at->locale('id')->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($payment->created_at)->locale('id')->isoFormat('D MMMM Y') }}</td>
                                 <td>{{ indonesian_currency($payment->amount) }}</td>
                                 <td>{{ \Carbon\Carbon::createFromDate($payment->year, $payment->month, $payment->day)->locale('id')->isoFormat('MMMM') }}</td>
                                 <td>{{ $payment->year }}</td>

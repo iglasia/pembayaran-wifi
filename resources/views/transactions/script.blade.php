@@ -96,6 +96,7 @@
             $('#editTransactionModal form #year').val('Sedang mengambil data..');
             $('#editTransactionModal form #internet_package_name').val('Sedang mengambil data..');
             $('#editTransactionModal form #internet_package_price').val('Sedang mengambil data..');
+            $('#editTransactionModal form #status').val('Sedang mengambil data..');
 
             $.ajax({
                 url: showTransactionUrl,
@@ -119,6 +120,7 @@
                         $('#editTransactionModal form #day').val(response.data.day);
                         $('#editTransactionModal form #month').val(response.data.month);
                         $('#editTransactionModal form #year').val(response.data.year);
+                        $('#editTransactionModal form #status').val(response.data.status);
 
                         editTransactionModalButtonSubmit.prop('disabled', false);
 
