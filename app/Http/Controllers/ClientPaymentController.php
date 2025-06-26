@@ -41,8 +41,8 @@ class ClientPaymentController extends Controller
             ],
             'expiry' => [
                 'start_time' => date("Y-m-d H:i:s O"),
-                'unit' => 'minute',
-                'duration' => 5
+                'unit' => 'hour',
+                'duration' => 1
             ]
         ];
 

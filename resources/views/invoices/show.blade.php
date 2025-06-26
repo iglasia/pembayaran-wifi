@@ -258,17 +258,15 @@
                 success: function (data) {
                     let id = data.id;
                     let orderId = data.orderId;
+                    console.log(data);
                     snap.pay(data.token, {
                         onSuccess: function(result) {
-                            console.log(result);
                             window.location.href = "/client/pembayaran/"+id+"/"+orderId;
                         },
                         onPending: function(result) {
-                            console.log(result);
                             window.location.href = "/client/tagihan";
                         },
                         onError: function(result) {
-                            console.log(result);
                             window.location.href = "/client/tagihan";
                         }
                     });
