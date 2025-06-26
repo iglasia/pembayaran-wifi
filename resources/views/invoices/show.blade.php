@@ -258,7 +258,6 @@
                 success: function (data) {
                     let id = data.id;
                     let orderId = data.orderId;
-                    console.log(data);
                     snap.pay(data.token, {
                         onSuccess: function(result) {
                             window.location.href = "/client/pembayaran/"+id+"/"+orderId;
