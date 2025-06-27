@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title') - Catur-Net</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ secure_asset('css/app.css') }}">
     <style>
         body { background: #f5f5f5; }
         .sidebar { background: #b0b0b0; /* abu-abu */ }

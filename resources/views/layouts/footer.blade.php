@@ -19,25 +19,25 @@
 </a>
 
 <!-- Bootstrap core JavaScript-->
-<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ secure_asset('vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ secure_asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 <!-- Core plugin JavaScript-->
-<script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<script src="{{ secure_asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
+<script src="{{ secure_asset('js/sb-admin-2.min.js') }}"></script>
 
 <!-- Page level plugins -->
-<script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ secure_asset('vendor/chart.js/Chart.min.js') }}"></script>
+<script src="{{ secure_asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ secure_asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
 
 <!-- Sweetalert -->
-<script src="{{ asset('vendor/sweetalert2/sweetalert2.js') }}"></script>
+<script src="{{ secure_asset('vendor/sweetalert2/sweetalert2.js') }}"></script>
 
 <!-- Selectize -->
-<script src="{{ asset('vendor/selectize/js/standalone/selectize.js') }}"></script>
+<script src="{{ secure_asset('vendor/selectize/js/standalone/selectize.js') }}"></script>
 
 <!-- Notify -->
 
@@ -61,7 +61,7 @@
 
         $('.delete-button').click(function (e) {
             e.preventDefault();
-            
+
             Swal.fire({
                 title: 'Hapus?',
                 text: "Data tidak akan bisa dikembalikan!",
@@ -78,7 +78,7 @@
                 }
             });
         });
-        
+
         $('.counter').each(function () {
             $(this).prop('Counter',0).animate({
                 Counter: $(this).text()

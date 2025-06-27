@@ -9,8 +9,16 @@ use Carbon\Carbon;
 
 class ClientBillingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->has('order_id')) {
+
+            $orderIdParts = explode('-', $request->order_id);
+            $id = $orderIdParts[0]; // Ambil bagian sebelum "-"
+
+            // Redirect ke route yang sama tapi tanpa query string
+            return redirect('/client/invoice/'. $id);
+        }
         $client = auth('client')->user();
 
         // Ambil semua transaksi klien
@@ -53,7 +61,7 @@ class ClientBillingController extends Controller
     {
         // 1. Ambil data transaksi
         $transaction = Transaction::findOrFail($id);
-        
+
         // 2. Ambil data setting
         $setting = Setting::first();
 
