@@ -54,6 +54,7 @@ class ClientPaymentController extends Controller
         $transaction = Transaction::findOrFail($id);
         $transaction->status = "Lunas";
         $transaction->order_id = $orderId;
+        $transaction->created_at = now();
         $transaction->save();
         return redirect('/client/tagihan');
 
