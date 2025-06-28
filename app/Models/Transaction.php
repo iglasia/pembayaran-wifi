@@ -9,7 +9,9 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['client_id', 'user_id', 'day', 'month', 'year', 'amount', 'status'];
+    public $timestamps = false; // Tambahkan ini untuk disable timestamps otomatis
+
+    protected $fillable = ['client_id', 'user_id', 'day', 'month', 'year', 'amount', 'status','created_at','order_id'];
 
     public function client()
     {

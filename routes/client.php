@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClientAuthController;
 use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\ClientBillingController;
+use App\Http\Controllers\ClientPaymentController;
 use App\Http\Controllers\ClientPaymentHistoryController;
 use App\Http\Controllers\ClientSettingsController;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,6 @@ Route::middleware('auth.client')->group(function () {
     Route::put('pengaturan', [ClientSettingsController::class, 'update'])->name('settings.update');
     Route::get('bayar/{id}', [ClientBillingController::class, 'bayar'])->name('bayar');
     Route::get('invoice/{id}', [ClientBillingController::class, 'invoice'])->name('invoice');
+    Route::post('pembayaran', [ClientPaymentController::class, 'token'])->name('pembayaran');
+    Route::get('pembayaran/{id}/{orderId}', [ClientPaymentController::class, 'pembayaranSukses'])->name('pembayaran-sukses');
 });

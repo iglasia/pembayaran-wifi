@@ -24,7 +24,8 @@ class TransactionController extends Controller
             'day' => $transaction->day,
             'month' => $transaction->month,
             'year' => $transaction->year,
-            'amount' => indonesian_currency($transaction->amount)
+            'amount' => indonesian_currency($transaction->amount),
+            'status' => $transaction->status,
         ];
 
         return response()->json([
@@ -46,6 +47,7 @@ class TransactionController extends Controller
             'day' => $transaction->day,
             'month' => $transaction->month,
             'year' => $transaction->year,
+            'status' => $transaction->status,
         ];
 
         return response()->json([

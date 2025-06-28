@@ -14,34 +14,37 @@ class ClientBillingController extends Controller
         $client = auth('client')->user();
 
         // Ambil semua transaksi klien
-        $transaksi = Transaction::where('client_id', $client->id)->get();
+        $transaksi = Transaction::where('client_id', $client->id)->orderBy('month', 'asc')->get();
+        // dd($transaksi->toArray());
 
-        // Tentukan awal langganan dan bulan sekarang
-        $awalLangganan = Carbon::parse($client->created_at)->startOfMonth();
-        $bulanSekarang = Carbon::now()->startOfMonth();
+        // // Tentukan awal langganan dan bulan sekarang
+        // $awalLangganan = Carbon::parse($client->created_at)->startOfMonth();
+        // $bulanSekarang = Carbon::now()->startOfMonth();
 
-        // Buat array daftar bulan-tahun dari awal langganan sampai bulan sekarang
-        $daftarTagihan = [];
-        $periode = $awalLangganan->copy();
-        while ($periode <= $bulanSekarang) {
-            $bulan = $periode->format('m');
-            $tahun = $periode->format('Y');
-            $sudahBayar = $transaksi->where('month', $bulan)->where('year', $tahun)->first();
+        // // Buat array daftar bulan-tahun dari awal langganan sampai bulan sekarang
+        // $daftarTagihan = [];
+        // $periode = $awalLangganan->copy();
+        // while ($periode <= $bulanSekarang) {
+        //     $bulan = $periode->format('m');
+        //     $tahun = $periode->format('Y');
+        //     $sudahBayar = $transaksi->where('month', $bulan)->where('year', $tahun)->first();
+        //     // dd($sudahBayar->status);
 
-            $daftarTagihan[] = [
-                'bulan' => $bulan,
-                'tahun' => $tahun,
-                'status' => $sudahBayar ? 'Lunas' : 'Belum Lunas',
-                'jumlah' => $client->internet_package->price,
-                'tanggal_bayar' => $sudahBayar ? $sudahBayar->created_at : null,
-                'transaction_id' => $sudahBayar ? $sudahBayar->id : null,
-            ];
+        //     $daftarTagihan[] = [
+        //         'bulan' => $bulan,
+        //         'tahun' => $tahun,
+        //         'status' => $sudahBayar ? 'Lunas' : 'Belum Lunas',
+        //         'jumlah' => $client->internet_package->price,
+        //         'tanggal_bayar' => $sudahBayar ? $sudahBayar->created_at : null,
+        //         'transaction_id' => $sudahBayar ? $sudahBayar->id : null,
+        //     ];
 
-            $periode->addMonth();
-        }
+        //     $periode->addMonth();
+        // }
 
+        // dd($transaksi->toArray());
         return view('client.billing', [
-            'tagihan' => $daftarTagihan,
+            'tagihan' => $transaksi,
             'client' => $client
         ]);
     }
@@ -50,7 +53,7 @@ class ClientBillingController extends Controller
     {
         // 1. Ambil data transaksi
         $transaction = Transaction::findOrFail($id);
-
+        
         // 2. Ambil data setting
         $setting = Setting::first();
 

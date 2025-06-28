@@ -24,7 +24,10 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::with('client', 'user')->select('id', 'client_id', 'user_id', 'day', 'month', 'year')->latest()->get();
+        $transactions = Transaction::with('client', 'user')
+        ->select('id', 'client_id', 'user_id', 'day', 'month', 'year','status')
+        ->orderBy('created_at', 'asc')
+        ->get();
 
         $clients = Client::select('id', 'name', 'ip_address')->orderBy('name')->get();
 
@@ -44,14 +47,26 @@ class TransactionController extends Controller
     {
         $client = Client::findOrFail($request->client_id);
 
-        Transaction::create([
+        $transactionData = [
             'client_id' => $request->client_id,
             'user_id' => auth()->id(),
             'day' => $request->day,
             'month' => $request->month,
             'year' => $request->year,
             'amount' => $client->internet_package->price,
-        ]);
+            'status' => $request->status,
+        ];
+
+        if ($request->status === 'Lunas') {
+            $transactionDate = Carbon::createFromDate($request->year, $request->month, $request->day);
+            $transactionData['created_at'] = $transactionDate;
+            
+            // Generate order_id dengan tanggal transaksi
+            $transactionData['order_id'] = $this->getIncrementTransactionId($request->client_id, $request->month);
+
+        }
+
+        Transaction::create($transactionData);
 
         return redirect()->route('tagihan.index')->with('success', 'Data berhasil ditambahkan!');
     }
@@ -66,17 +81,37 @@ class TransactionController extends Controller
     public function update(UpdateTransactionRequest $request, $id)
     {
         $transaction = Transaction::findOrFail($id);
+        $client = Client::findOrFail($request->client_id);
 
-        $transaction->update([
+        $transactionData = [
             'client_id' => $request->client_id,
             'user_id' => auth()->id(),
             'day' => $request->day,
             'month' => $request->month,
             'year' => $request->year,
-            'amount' => $transaction->client->internet_package->price
-        ]);
+            'amount' => $client->internet_package->price,
+            'status' => $request->status,
+        ];
 
-        return redirect()->route('tagihan.index')->with('success', 'Data berhasil diubah!');
+        if ($request->status === 'Lunas') {
+            $transactionDate = Carbon::createFromDate($request->year, $request->month, $request->day);
+            $transactionData['created_at'] = $transactionDate;
+            
+            // Generate order_id baru jika sebelumnya belum Lunas
+            if ($transaction->status !== 'Lunas') {
+                $transactionData['order_id'] = $this->getIncrementTransactionId($request->client_id, $request->month);
+            }
+        } else {
+            // Reset jika status diubah dari Lunas ke non-Lunas
+            if ($transaction->status === 'Lunas') {
+                $transactionData['order_id'] = null;
+                $transactionData['created_at'] = null;
+            }
+        }
+
+        $transaction->update($transactionData);
+
+        return redirect()->route('tagihan.index')->with('success', 'Data berhasil diperbarui!');
     }
 
     /**
@@ -90,5 +125,27 @@ class TransactionController extends Controller
         Transaction::findOrFail($id)->delete();
 
         return redirect()->route('tagihan.index')->with('success', 'Data berhasil dihapus!');
+    }
+
+
+    /**
+ * Generate increment transaction ID
+ * Format: INV/YYYYMMDD/XXXX (XXXX adalah increment per hari)
+ * 
+ * @param string|null $date Tanggal transaksi (format Y-m-d), null untuk hari ini
+ * @return string
+ */
+   protected function getIncrementTransactionId($clientId,$month)
+    {
+        // Ambil ID terakhir
+        $lastTransaction = Transaction::where('client_id', $clientId)
+            ->where('month', $month)
+            ->first();
+
+        // Ambil timestamp saat ini
+        $timestamp = time();
+        
+        // Gabungkan increment dan timestamp
+        return $lastTransaction->id . '-' . $timestamp;
     }
 }

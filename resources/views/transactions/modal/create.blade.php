@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 col-lg-4">
+                        <div class="col-md-12 col-lg-3">
                             <div class="form-group">
                                 <label for="day">Hari</label>
                                 <select class="form-control" name="day" id="day">
@@ -60,7 +60,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12 col-lg-4">
+                        <div class="col-md-12 col-lg-3">
                             <div class="form-group">
                                 <label for="month">Bulan</label>
                                 <select class="form-control" name="month" id="month">
@@ -74,11 +74,20 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12 col-lg-4">
+                        <div class="col-md-12 col-lg-3">
                             <div class="form-group">
                                 <label for="year">Tahun</label>
                                 <input type="number" class="form-control" name="year" id="year" value="{{ date('Y') }}"
                                     placeholder="Masukkan tahun">
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-3">
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select class="form-control" name="status" id="status">
+                                    <option value="Belum Lunas">Belum Lunas</option>
+                                    <option value="Lunas">Lunas</option>
+                                </select>
                             </div>
                         </div>
                     </div>
