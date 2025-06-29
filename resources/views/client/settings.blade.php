@@ -1,4 +1,6 @@
-@extends('layouts.client')
+@extends('layouts.app', [
+    'title' => 'Pengaturan Akun Klien',
+])
 
 @section('title', 'Pengaturan Akun')
 
@@ -15,7 +17,7 @@
                 <div class="col-12 col-md-6">
                     <div class="mb-3">
                         <label for="nik" class="form-label">NIK</label>
-                        <input type="text" class="form-control" id="nik" name="nik" value="{{ old('nik', auth('client')->user()->nik) }}">
+                        <input type="text" class="form-control" id="nik" name="nik" value="{{ old('nik',$client->nik) }}" required>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">

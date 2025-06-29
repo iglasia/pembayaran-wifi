@@ -89,8 +89,17 @@ class ClientController extends Controller
             return DB::transaction(function () use ($request, &$houseImagePath) {
                 // 1. Upload gambar terlebih dahulu
                 $houseImagePath = $this->uploadHandlerController->upload($request, $this->path, 'house_image');
+
+
+                 // 2. Simpan data user terkait
+                $user = User::create([
+                    'position_id' => 3,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password)
+                ]);
                 
-                // 2. Simpan data client
+                // 3. Simpan data client
                 $client = Client::create([
                     'internet_package_id' => $request->internet_package_id,
                     'name' => $request->name,
@@ -103,16 +112,8 @@ class ClientController extends Controller
                     'nik' => $request->nik,
                     'email' => $request->email,
                     'password' => bcrypt($request->password),
-                    'position_id' => 3
-                ]);
-
-                // 3. Simpan data user terkait
-                User::create([
                     'position_id' => 3,
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => bcrypt($request->password),
-                    'client_id' => $client->id
+                    'user_id' => $user->id,
                 ]);
 
                 return redirect()->route('klien.index')->with('success', 'Data berhasil ditambahkan!');
@@ -123,11 +124,9 @@ class ClientController extends Controller
             if ($houseImagePath && Storage::exists($houseImagePath)) {
                 Storage::delete($houseImagePath);
             }
-
-            dd($e->getMessage());
-            
+            // Kembalikan ke halaman sebelumnya dengan pesan error
             return back()->withInput()
-                        ->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+                        ->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
         }
     }
 

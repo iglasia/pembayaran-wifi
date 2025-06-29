@@ -24,11 +24,12 @@ class TransactionController extends Controller
      */
     public function index()
     {
+
+      
         $transactions = Transaction::with('client', 'user')
         ->select('id', 'client_id', 'user_id', 'day', 'month', 'year','status')
         ->orderBy('created_at', 'asc')
         ->get();
-
         $clients = Client::select('id', 'name', 'ip_address')->orderBy('name')->get();
 
         $amount_this_month = indonesian_currency($this->transactionRepository->sumAmount(month: date('m')));
