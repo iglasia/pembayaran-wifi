@@ -34,7 +34,7 @@ class AuthenticatedSessionController extends Controller
         // Hanya coba login sebagai admin/operator
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            if (Auth::user()->isAdmin()) {
+            if (Auth::user()->isAdmin() || Auth::user()->isOwner()) {
                 return redirect()->intended('/dashboard');
             } else {
                return redirect()->route('client.dashboard');

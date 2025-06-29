@@ -33,10 +33,6 @@ Route::get('/', function () {
 // ROUTE CLIENT
 // -----------------------------
 Route::prefix('client')->name('client.')->group(function () {
-    // tanpa login
-    Route::get('login', [ClientAuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [ClientAuthController::class, 'store'])->name('login.store');
-    Route::post('logout', [ClientAuthController::class, 'logout'])->name('logout');
 
     // dengan login
     Route::middleware('auth')->group(function () {
