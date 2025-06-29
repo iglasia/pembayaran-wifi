@@ -14,7 +14,7 @@ Route::post('login', [ClientAuthController::class, 'store'])->name('login.store'
 Route::post('logout', [ClientAuthController::class, 'logout'])->name('logout');
 
 // Rute yang memerlukan login klien
-Route::middleware('auth.client')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('dashboard', [ClientDashboardController::class, 'index'])->name('dashboard');
     Route::get('tagihan', [ClientBillingController::class, 'index'])->name('billing');
     Route::get('riwayat-pembayaran', [ClientPaymentHistoryController::class, 'index'])->name('payment-history');
