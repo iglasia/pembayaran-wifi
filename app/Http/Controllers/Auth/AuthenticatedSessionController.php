@@ -34,7 +34,14 @@ class AuthenticatedSessionController extends Controller
         // Hanya coba login sebagai admin/operator
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            if (Auth::user()->isAdmin() || Auth::user()->isOwner()) {
+                return redirect()->intended('/dashboard');
+            } else {
+               return redirect()->route('client.dashboard');
+            }
+             return back()->withErrors([
+            'Hak Akses' => 'Hak Akses di tolak! Anda bukan admin atau operator.',
+              ]);
         }
 
         return back()->withErrors([

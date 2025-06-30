@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Transaction;
+use App\Models\{Transaction, Client};
 
 class ClientDashboardController extends Controller
 {
     public function index()
     {
-        $client = auth('client')->user();
+        $user = auth()->user();
+
+        $client = Client::where('user_id', $user->id)->first();
         
         // Query ini sekarang akan berhasil!
         $unpaid_transactions = Transaction::where('client_id', $client->id)

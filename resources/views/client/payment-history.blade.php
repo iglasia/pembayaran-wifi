@@ -1,4 +1,6 @@
-@extends('layouts.client')
+@extends('layouts.app', [
+    'title' => 'Riwayat Pembayaran Klien',
+])
 
 @section('title', 'Riwayat Pembayaran')
 

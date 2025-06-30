@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAdministratorApplicationRequest;
 use App\Http\Requests\UpdateAdministratorApplicationRequest;
-use App\Models\Position;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use App\Models\{User,Admin,Position};
 use Illuminate\Http\Request;
 
 class AdministratorApplicationController extends Controller
@@ -28,16 +28,39 @@ class AdministratorApplicationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAdministratorApplicationRequest $request)
+   public function store(StoreAdministratorApplicationRequest $request)
     {
-        User::create([
+        DB::beginTransaction();
+
+        try {
+            // 1. Buat user baru
+            $user = User::create([
             'position_id' => $request->position_id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password)
-        ]);
+            ]);
 
-        return redirect()->route('administrator-aplikasi.index')->with('success', 'Data berhasil ditambahkan!');
+            // 2. Buat record admin terkait
+            $position = Position::where('id', $request->position_id)->first();
+
+            Admin::create([
+                'user_id' => $user->id,
+                'name' => $request->name,
+                'description' => $request->name,
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('administrator-aplikasi.index')
+                ->with('success', 'Data administrator berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withInput()
+               ->withErrors(['error' => 'Gagal menyimpan data: '.$e->getMessage()]);
+        }
     }
 
     /**
@@ -49,23 +72,45 @@ class AdministratorApplicationController extends Controller
      */
     public function update(UpdateAdministratorApplicationRequest $request, $id)
     {
-        $administrator_application = User::findOrFail($id);
+        DB::beginTransaction();
 
-        if ($request->password !== null) {
-            $administrator_application->update([
-                'password' => bcrypt($request->password)
-            ]);
+        try {
+            $user = User::findOrFail($id);
+            $admin = $user->admin; // Asumsi ada relasi admin di model User
+
+            // Update data user
+            $userData = [
+                'position_id' => $request->position_id,
+                'name' => $request->name,
+                'email' => $request->email
+            ];
+
+            if ($request->filled('password')) {
+                $userData['password'] = bcrypt($request->password);
+            }
+
+            $user->update($userData);
+
+            // Update data admin terkait
+            if ($admin) {
+                $admin->update([
+                    'name' => $request->name,
+                    'description' => $request->description ?? $admin->description
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('administrator-aplikasi.index')
+                ->with('success', 'Data administrator berhasil diubah!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return back()->withInput()
+                    ->withErrors(['error' => 'Gagal mengupdate data: '.$e->getMessage()]);
         }
-
-        $administrator_application->update([
-            'position_id' => $request->position_id,
-            'name' => $request->name,
-            'email' => $request->email
-        ]);
-
-        return redirect()->route('administrator-aplikasi.index')->with('success', 'Data berhasil diubah!');
     }
-
     /**
      * Remove the specified resource from storage.
      *

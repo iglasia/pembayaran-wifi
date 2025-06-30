@@ -79,12 +79,18 @@
                             <div class="form-group">
                                 <label for="status">Status</label>
                                 <select class="form-control" name="status" id="status">
-                                    <option value="Belum Lunas"
-                                        {{ $transaction->status == 'Belum Lunas' ? 'selected' : '' }}>Belum Lunas
+                                    <option value="" {{ empty($transaction) ? 'selected' : '' }}>Pilih Status
                                     </option>
-                                    <option value="Lunas" {{ $transaction->status == 'Lunas' ? 'selected' : '' }}>Lunas
+                                    <option value="Belum Lunas"
+                                        {{ isset($transaction) && $transaction->status == 'Belum Lunas' ? 'selected' : '' }}>
+                                        Belum Lunas
+                                    </option>
+                                    <option value="Lunas"
+                                        {{ isset($transaction) && $transaction->status == 'Lunas' ? 'selected' : '' }}>
+                                        Lunas
                                     </option>
                                 </select>
+
                             </div>
                         </div>
                     </div>

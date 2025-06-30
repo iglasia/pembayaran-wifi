@@ -24,7 +24,7 @@ class Client extends Authenticatable
     'subscription_ended_at',
     'subscription_reactivated_at',
     'email',
-    'password',
+    'user_id'
     ];
 
     protected $hidden = [

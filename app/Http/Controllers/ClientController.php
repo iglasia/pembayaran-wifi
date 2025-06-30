@@ -7,7 +7,9 @@ use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\InternetPackage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Models\{InternetPackage, Position,User};
 
 class ClientController extends Controller
 {
@@ -69,8 +71,8 @@ class ClientController extends Controller
     public function create()
     {
         $internet_packages = InternetPackage::select('id', 'name', 'price')->orderBy('price')->get();
-
-        return view('clients.create', compact('internet_packages'));
+        $positions = Position::select('id', 'name')->orderBy('name')->get();
+        return view('clients.create', compact('internet_packages', 'positions'));
     }
 
     /**
@@ -79,23 +81,53 @@ class ClientController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreClientRequest $request)
+   public function store(StoreClientRequest $request)
     {
-        Client::create([
-            'internet_package_id' => $request->internet_package_id,
-            'name' => $request->name,
-            'ip_address' => $request->ip_address,
-            'phone_number' => $request->phone_number,
-            'house_image' => $this->uploadHandlerController->upload($request, $this->path, 'house_image'),
-            'address' => $request->address,
-            'longitude' => $request->longitude,   
-            'latitude' => $request->latitude,
-            'nik' => $request->nik,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+        $houseImagePath = null;
+        
+        try {
+            return DB::transaction(function () use ($request, &$houseImagePath) {
+                // 1. Upload gambar terlebih dahulu
+                $houseImagePath = $this->uploadHandlerController->upload($request, $this->path, 'house_image');
 
-        return redirect()->route('klien.index')->with('success', 'Data berhasil ditambahkan!');
+
+                 // 2. Simpan data user terkait
+                $user = User::create([
+                    'position_id' => 3,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password)
+                ]);
+                
+                // 3. Simpan data client
+                $client = Client::create([
+                    'internet_package_id' => $request->internet_package_id,
+                    'name' => $request->name,
+                    'ip_address' => $request->ip_address,
+                    'phone_number' => $request->phone_number,
+                    'house_image' => $houseImagePath,
+                    'address' => $request->address,
+                    'longitude' => $request->longitude,
+                    'latitude' => $request->latitude,
+                    'nik' => $request->nik,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'position_id' => 3,
+                    'user_id' => $user->id,
+                ]);
+
+                return redirect()->route('klien.index')->with('success', 'Data berhasil ditambahkan!');
+            });
+            
+        } catch (\Exception $e) {
+            // Rollback file jika ada error
+            if ($houseImagePath && Storage::exists($houseImagePath)) {
+                Storage::delete($houseImagePath);
+            }
+            // Kembalikan ke halaman sebelumnya dengan pesan error
+            return back()->withInput()
+                        ->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+        }
     }
 
     /**

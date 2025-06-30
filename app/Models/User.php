@@ -20,7 +20,7 @@ class User extends Authenticatable
         'position_id',
         'name',
         'email',
-        'password',
+        'password'
     ];
 
     /**
@@ -42,8 +42,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function admin()
+    {
+        return $this->hasOne(Admin::class);
+    }
+
     public function position()
     {
         return $this->belongsTo(Position::class);
+    }
+
+      public function isOwner()
+    {
+        return $this->position_id === 1; // Owner of CaturNET
+    }
+
+    public function isAdmin()
+    {
+        return $this->position_id === 2; // Admin CaturNET
+    }
+
+    public function isClient()
+    {
+        return $this->position_id === null || $this->position_id >= 3; // Asumsi client memiliki position_id >= 3 atau null
     }
 }
