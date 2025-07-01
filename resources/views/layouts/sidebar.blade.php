@@ -1,8 +1,8 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" 
-       href="{{ auth()->user()->isClient() ? route('client.dashboard') : route('dashboard') }}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center"
+        href="{{ auth()->user()->isClient() ? route('client.dashboard') : route('dashboard') }}">
         <div class="sidebar-brand-icon {{ !auth()->user()->isClient() ? 'rotate-n-15' : '' }}">
             <i class="fas fa-wifi"></i>
         </div>
@@ -25,7 +25,7 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
-    @if(!auth()->user()->isClient())
+    @if (!auth()->user()->isClient())
         <!-- Admin/Owner Menu -->
         <div class="sidebar-heading">Menu Admin</div>
 
@@ -43,7 +43,7 @@
             </a>
         </li>
 
-        @if(auth()->user()->isOwner())
+        @if (auth()->user()->isOwner())
             <li class="nav-item {{ request()->routeIs('administrator-aplikasi.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('administrator-aplikasi.index') }}">
                     <i class="fas fa-fw fa-user-shield"></i>
@@ -51,6 +51,12 @@
                 </a>
             </li>
         @endif
+
+        <li class="nav-item {{ request()->routeIs('payment-history.*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('payment-history.index') }}">
+                <i class="fas fa-fw fa-history"></i>
+                <span>Riwayat Pembayaran</span></a>
+        </li>
 
         <li class="nav-item {{ request()->routeIs('tagihan.*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('tagihan.index') }}">
@@ -72,7 +78,7 @@
             </a>
         </li>
 
-        @if(auth()->user()->isOwner())
+        @if (auth()->user()->isOwner())
             <li class="nav-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('settings.index') }}">
                     <i class="fas fa-fw fa-cog"></i>
