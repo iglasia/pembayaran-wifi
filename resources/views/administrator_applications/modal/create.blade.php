@@ -17,7 +17,7 @@
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name"
                             id="name" value="{{ old('name') }}" placeholder="Masukkan nama">
                         @error('name')
-                        <small class="d-block font-weight-bold invalid-feedback">{{ $errors->first('name') }}</small>
+                            <small class="d-block font-weight-bold invalid-feedback">{{ $errors->first('name') }}</small>
                         @enderror
                     </div>
 
@@ -27,21 +27,24 @@
                             id="position_id">
                             <option selected>Pilih..</option>
                             @foreach ($positions as $position)
-                            <option value="{{ $position->id }}">{{ $position->name }}</option>
+                                @if ($position->id != 3)
+                                    <option value="{{ $position->id }}">{{ $position->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                         @error('position_id')
-                        <small
-                            class="d-block font-weight-bold invalid-feedback">{{ $errors->first('position_id') }}</small>
+                            <small
+                                class="d-block font-weight-bold invalid-feedback">{{ $errors->first('position_id') }}</small>
                         @enderror
                     </div>
+
 
                     <div class="form-group">
                         <label for="email">Alamat Email</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" name="email"
                             id="email" value="{{ old('email') }}" placeholder="Masukkan alamat email">
                         @error('email')
-                        <small class="d-block font-weight-bold invalid-feedback">{{ $errors->first('email') }}</small>
+                            <small class="d-block font-weight-bold invalid-feedback">{{ $errors->first('email') }}</small>
                         @enderror
                     </div>
 
@@ -56,8 +59,8 @@
                             </div>
                         </div>
                         @error('password')
-                        <small
-                            class="d-block font-weight-bold invalid-feedback">{{ $errors->first('password') }}</small>
+                            <small
+                                class="d-block font-weight-bold invalid-feedback">{{ $errors->first('password') }}</small>
                         @enderror
                     </div>
 
@@ -74,8 +77,8 @@
                             </div>
                         </div>
                         @error('password_confirmation')
-                        <small
-                            class="d-block font-weight-bold invalid-feedback">{{ $errors->first('password_confirmation') }}</small>
+                            <small
+                                class="d-block font-weight-bold invalid-feedback">{{ $errors->first('password_confirmation') }}</small>
                         @enderror
                     </div>
             </div>

@@ -1,6 +1,6 @@
 <!-- Modal -->
-<div class="modal fade" id="editAdministratorApplicationModal" data-backdrop="static" data-keyboard="false"
-    tabindex="-1" aria-labelledby="editAdministratorApplicationModalLabel" aria-hidden="true">
+<div class="modal fade" id="editAdministratorApplicationModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="editAdministratorApplicationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +15,8 @@
                     @method('PUT')
                     <div class="form-group">
                         <label for="name">Nama</label>
-                        <input type="text" class="form-control" name="name" id="name" placeholder="Masukkan nama">
+                        <input type="text" class="form-control" name="name" id="name"
+                            placeholder="Masukkan nama">
                     </div>
 
                     <div class="form-group">
@@ -23,10 +24,13 @@
                         <select name="position_id" class="form-control" id="position_id">
                             <option selected>Pilih..</option>
                             @foreach ($positions as $position)
-                            <option value="{{ $position->id }}">{{ $position->name }}</option>
+                                @if ($position->id != 3)
+                                    <option value="{{ $position->id }}">{{ $position->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
+
 
                     <div class="form-group">
                         <label for="email">Alamat Email</label>
