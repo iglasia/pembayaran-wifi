@@ -52,6 +52,23 @@
                     data-target="#addTransactionModal">
                     Tambah Data
                 </button>
+                <form method="GET" action="{{ route('tagihan.index') }}" class="form-inline mb-3">
+                    <label for="month" class="mr-2">Bulan:</label>
+                    <select name="month" id="month" class="form-control mr-2">
+                        @for ($m = 1; $m <= 12; $m++)
+                            <option value="{{ sprintf('%02d', $m) }}" {{ $selectedMonth == sprintf('%02d', $m) ? 'selected' : '' }}>
+                                {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                            </option>
+                        @endfor
+                    </select>
+                    <label for="year" class="mr-2">Tahun:</label>
+                    <select name="year" id="year" class="form-control mr-2">
+                        @for ($y = date('Y') - 2; $y <= date('Y') + 1; $y++)
+                            <option value="{{ $y }}" {{ $selectedYear == $y ? 'selected' : '' }}>{{ $y }}</option>
+                        @endfor
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="datatable" width="100%" cellspacing="0">
                         <thead class="text-center">

@@ -22,20 +22,24 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $selectedMonth = $request->input('month', date('m')); // default: bulan sekarang
+        $selectedYear = $request->input('year', date('Y'));   // default: tahun sekarang
 
-      
         $transactions = Transaction::with('client', 'user')
-        ->select('id', 'client_id', 'user_id', 'day', 'month', 'year','status')
-        ->orderBy('created_at', 'asc')
-        ->get();
+            ->select('id', 'client_id', 'user_id', 'day', 'month', 'year', 'status')
+            ->where('month', $selectedMonth)
+            ->where('year', $selectedYear)
+            ->orderBy('day', 'asc')
+            ->get();
+
         $clients = Client::select('id', 'name', 'ip_address')->orderBy('name')->get();
 
-        $amount_this_month = indonesian_currency($this->transactionRepository->sumAmount(month: date('m')));
-        $amount_this_year = indonesian_currency($this->transactionRepository->sumAmount(year: date('Y')));
+        $amount_this_month = indonesian_currency($this->transactionRepository->sumAmount(month: $selectedMonth));
+        $amount_this_year = indonesian_currency($this->transactionRepository->sumAmount(year: $selectedYear));
 
-        return view('transactions.index', compact('transactions', 'clients', 'amount_this_month', 'amount_this_year'));
+        return view('transactions.index', compact('transactions', 'clients', 'amount_this_month', 'amount_this_year', 'selectedMonth', 'selectedYear'));
     }
 
     /**
