@@ -28,4 +28,7 @@
 
     <!-- Selectize -->
     <link rel="stylesheet" href="{{ asset('vendor/selectize/css/selectize.bootstrap4.css') }}">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 </head>

@@ -1,8 +1,13 @@
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
 <script>
+
+    
     $(function() {
         function changeLabelFile(e) {
-            if(e.target.files.length === 0) {
-                return $('#label_house_image').html('Pilih Gambar');    
+            if (e.target.files.length === 0) {
+                return $('#label_house_image').html('Pilih Gambar');
             }
 
             return $('#label_house_image').html(e.target.files[0].name);
@@ -19,7 +24,7 @@
 
             let reader = new FileReader();
 
-            if(!reader) {
+            if (!reader) {
                 return;
             }
 
