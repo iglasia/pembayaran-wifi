@@ -144,7 +144,7 @@
         <div class="invoice-header">
             <div>
                 @if ($setting && $setting->logo)
-                    <img src="{{ asset('storage/' . $setting->logo) }}" class="logo" alt="Logo">
+                    <img src="{{ asset($setting->logo) }}" class="logo" alt="Logo">
                 @endif
                 <h4 class="mt-2">{{ $setting->store_name ?? 'Nama Toko' }}</h4>
                 <p>

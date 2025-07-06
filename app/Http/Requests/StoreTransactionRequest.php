@@ -44,7 +44,8 @@ class StoreTransactionRequest extends FormRequest
 
             'day.required' => 'Kolom hari wajib diisi!',
             'month.required' => 'Kolom bulan wajib diisi!',
-            'year.required' => 'Kolom tahun wajib diisi!'
+            'year.required' => 'Kolom tahun wajib diisi!',
+            'client_id.unique' => 'Client sudah memiliki transaksi pada bulan dan tahun yang dipilih.',
         ];
     }
 }

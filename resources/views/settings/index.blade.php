@@ -8,14 +8,7 @@
                 <h6 class="m-0 font-weight-bold text-primary">Pengaturan Toko/Jasa</h6>
             </div>
             <div class="card-body">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
+                @include('components.alert-message')
 
                 <form action="{{ route('settings.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -64,7 +57,7 @@
                         <label for="logo">Logo Toko/Jasa</label>
                         @if(isset($setting) && $setting->logo)
                             <div class="mb-2">
-                                <img src="{{ asset('storage/' . $setting->logo) }}" 
+                                <img src="{{ asset( $setting->logo) }}" 
                                      alt="Logo" class="img-thumbnail" style="max-height: 100px;">
                                 <small class="form-text text-muted">Logo saat ini</small>
                             </div>

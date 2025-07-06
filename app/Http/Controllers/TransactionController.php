@@ -52,6 +52,18 @@ class TransactionController extends Controller
     {
         $client = Client::findOrFail($request->client_id);
 
+        // Cek apakah sudah ada transaksi di bulan dan tahun yang sama
+        $existingTransaction = Transaction::where('client_id', $request->client_id)
+            ->where('month', $request->month)
+            ->where('year', $request->year)
+            ->first();
+
+        if ($existingTransaction) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Client sudah memiliki transaksi pada bulan dan tahun yang dipilih.');
+        }
+
         $transactionData = [
             'client_id' => $request->client_id,
             'user_id' => auth()->id(),
@@ -68,7 +80,6 @@ class TransactionController extends Controller
             
             // Generate order_id dengan tanggal transaksi
             $transactionData['order_id'] = $this->getIncrementTransactionId($request->client_id, $request->month);
-
         }
 
         Transaction::create($transactionData);
