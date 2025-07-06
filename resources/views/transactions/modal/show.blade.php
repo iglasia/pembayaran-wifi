@@ -76,10 +76,16 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="amount">Total Bayar</label>
                                 <input type="text" class="form-control" id="amount" disabled>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="amount">Status</label>
+                                <input type="text" class="form-control" id="status" disabled>
                             </div>
                         </div>
                     </div>

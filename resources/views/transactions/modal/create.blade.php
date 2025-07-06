@@ -11,6 +11,7 @@
             </div>
             <div class="modal-body">
                 <form action="{{ route('tagihan.store') }}" method="POST">
+                    <input type="text" class="form-control" name="status" id="status" value="Belum Lunas" hidden>
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
@@ -19,8 +20,9 @@
                                 <select class="form-control selectize" name="client_id" id="client_id">
                                     <option></option>
                                     @foreach ($clients as $client)
-                                    <option value="{{ $client->id }}">{{ $client->name }} - {{ $client->ip_address }}
-                                    </option>
+                                        <option value="{{ $client->id }}">{{ $client->name }} -
+                                            {{ $client->ip_address }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -46,48 +48,39 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 col-lg-3">
+                        <div class="col-md-12 col-lg-4">
                             <div class="form-group">
                                 <label for="day">Hari</label>
                                 <select class="form-control" name="day" id="day">
                                     <option>Pilih..</option>
-                                    @foreach (range(1,31) as $day)
-                                    <option value="{{ sprintf('%02d', $day) }}"
-                                        {{ sprintf('%02d', $day) === date('d') ? 'selected' : '' }}>
-                                        {{ sprintf('%02d', $day) }}</option>
+                                    @foreach (range(1, 31) as $day)
+                                        <option value="{{ sprintf('%02d', $day) }}"
+                                            {{ sprintf('%02d', $day) === date('d') ? 'selected' : '' }}>
+                                            {{ sprintf('%02d', $day) }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-12 col-lg-3">
+                        <div class="col-md-12 col-lg-4">
                             <div class="form-group">
                                 <label for="month">Bulan</label>
                                 <select class="form-control" name="month" id="month">
                                     <option>Pilih..</option>
                                     @foreach (range(1, 12) as $month)
-                                    <option value="{{ sprintf('%02d', $month) }}"
-                                        {{ sprintf('%02d', $month) === date('m') ? 'selected' : '' }}>
-                                        {{ sprintf('%02d', $month) }}</option>
+                                        <option value="{{ sprintf('%02d', $month) }}"
+                                            {{ sprintf('%02d', $month) === date('m') ? 'selected' : '' }}>
+                                            {{ sprintf('%02d', $month) }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
 
-                        <div class="col-md-12 col-lg-3">
+                        <div class="col-md-12 col-lg-4">
                             <div class="form-group">
                                 <label for="year">Tahun</label>
-                                <input type="number" class="form-control" name="year" id="year" value="{{ date('Y') }}"
-                                    placeholder="Masukkan tahun">
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-3">
-                            <div class="form-group">
-                                <label for="status">Status</label>
-                                <select class="form-control" name="status" id="status">
-                                    <option value="Belum Lunas">Belum Lunas</option>
-                                    <option value="Lunas">Lunas</option>
-                                </select>
+                                <input type="number" class="form-control" name="year" id="year"
+                                    value="{{ date('Y') }}" placeholder="Masukkan tahun">
                             </div>
                         </div>
                     </div>

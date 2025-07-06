@@ -40,6 +40,7 @@
             $('#detailTransactionModal form #month').val('Sedang mengambil data..');
             $('#detailTransactionModal form #year').val('Sedang mengambil data..');
             $('#detailTransactionModal form #amount').val('Sedang mengambil data..');
+            $('#detailTransactionModal form #status').val('Sedang mengambil data..');
 
             $.ajax({
                 url: url,
@@ -55,6 +56,7 @@
                         $('#detailTransactionModal form #month').val(response.data.month);
                         $('#detailTransactionModal form #year').val(response.data.year);
                         $('#detailTransactionModal form #amount').val(response.data.amount);
+                        $('#detailTransactionModal form #status').val(response.data.status);
                     });
                 },
                 error: function() {
@@ -96,7 +98,7 @@
             $('#editTransactionModal form #year').val('Sedang mengambil data..');
             $('#editTransactionModal form #internet_package_name').val('Sedang mengambil data..');
             $('#editTransactionModal form #internet_package_price').val('Sedang mengambil data..');
-            $('#editTransactionModal form #status').val('Sedang mengambil data..');
+            $('#editTransactionModal form #status').attr('type', 'text');
 
             $.ajax({
                 url: showTransactionUrl,
