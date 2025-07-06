@@ -124,24 +124,28 @@
 
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
-                        <a href="{{ route('klien.index') }}" class="btn btn-secondary">Kembali</a>
-                        <a href="{{ route('klien.edit', $client->id) }}" class="btn btn-success">Ubah</a>
-                    </div>
-                </div>
+                        <button type="button" class="btn btn-secondary "
+                            onclick="window.location.href='{{ route('klien.index') }}'">
+                            Kembali
+                        </button>
 
-                <div class="row">
-                    <div class="col-md-12 col-lg-6">
+                        <button type="button" class="btn btn-success me-2"
+                            onclick="window.location.href='{{ route('klien.edit', $client->id) }}'">
+                            Ubah
+                        </button>
+
                         <form action="{{ route('klien.toggle-subscription', $client->id) }}" method="POST"
-                            class="d-inline">
+                            class="d-inline-block">
                             @csrf
                             @method('PUT')
                             <button type="submit"
-                                class="btn btn-sm {{ $client->subscription_status === 'active' ? 'btn-danger' : 'btn-success' }}">
+                                class="btn {{ $client->subscription_status === 'active' ? 'btn-danger' : 'btn-success' }}">
                                 {{ $client->subscription_status === 'active' ? 'Nonaktifkan' : 'Aktifkan' }}
                             </button>
                         </form>
                     </div>
                 </div>
+
             </div>
         </div>
     @endsection
@@ -149,34 +153,35 @@
     @push('js')
         <!-- Leaflet JS -->
         <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-        
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                
+
                 // Check if latitude and longitude are available
-                @if($client->latitude && $client->longitude)
+                @if ($client->latitude && $client->longitude)
                     console.log('Koordinat lokasi tersedia untuk klien: {{ $client->name }}');
 
                     var latitude = {{ $client->latitude }};
                     var longitude = {{ $client->longitude }};
-                    
+
                     console.log('Latitude:', latitude);
                     console.log('Longitude:', longitude);
                     // Initialize the map
                     var map = L.map('map').setView([longitude, latitude], 15);
-                    
+
                     // Add OpenStreetMap tiles
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     }).addTo(map);
-                    
+
                     // Add a marker
                     L.marker([longitude, latitude]).addTo(map)
                         .bindPopup('Lokasi Rumah Klien ')
                         .openPopup();
                 @else
                     // Show a message if coordinates are not available
-                    document.getElementById('map').innerHTML = '<div class="text-center p-4">Koordinat lokasi tidak tersedia</div>';
+                    document.getElementById('map').innerHTML =
+                        '<div class="text-center p-4">Koordinat lokasi tidak tersedia</div>';
                 @endif
             });
         </script>
