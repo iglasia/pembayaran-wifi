@@ -168,10 +168,11 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
+    {   
         $client = Client::with('internet_package')->findOrFail($id);
+        $allClients = Client::whereNotNull('latitude')->whereNotNull('longitude')->get();
 
-        return view('clients.show', compact('client'));
+        return view('clients.show', compact('client', 'allClients'));
     }
 
     /**

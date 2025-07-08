@@ -156,28 +156,63 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-
-                // Check if latitude and longitude are available
+                // Check if latitude and longitude are available for the specific client
                 @if ($client->latitude && $client->longitude)
                     console.log('Koordinat lokasi tersedia untuk klien: {{ $client->name }}');
 
+                    // Initialize the map with the specific client's location as center
                     var latitude = {{ $client->latitude }};
                     var longitude = {{ $client->longitude }};
-
-                    console.log('Latitude:', latitude);
-                    console.log('Longitude:', longitude);
-                    // Initialize the map
-                    var map = L.map('map').setView([longitude, latitude], 15);
+                    var map = L.map('map').setView([latitude,longitude], 12);
 
                     // Add OpenStreetMap tiles
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     }).addTo(map);
 
-                    // Add a marker
-                    L.marker([longitude, latitude]).addTo(map)
-                        .bindPopup('Lokasi Rumah Klien ')
-                        .openPopup();
+                    // Create custom icons
+                    var blueIcon = new L.Icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    });
+
+                    var redIcon = new L.Icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    });
+
+                    // Add all clients from database (assuming you pass $allClients from controller)
+
+                    @if (isset($allClients))
+                        @foreach ($allClients as $clientMarker)
+                            @if ($clientMarker->latitude && $clientMarker->longitude)
+                                // Check if this is the specific client we're viewing
+                                @if ($clientMarker->id == $client->id)
+                                    // Add red marker for the specific client
+                                    L.marker([{{ $clientMarker->latitude }}, {{ $clientMarker->longitude }}], {
+                                            icon: redIcon
+                                        })
+                                        .addTo(map)
+                                        .bindPopup('<b>{{ $clientMarker->name }}</b><br>Lokasi Klien Saat Ini');
+                                @else
+                                    // Add blue marker for other clients
+                                    L.marker([{{ $clientMarker->latitude }}, {{ $clientMarker->longitude }}], {
+                                            icon: blueIcon
+                                        })
+                                        .addTo(map)
+                                        .bindPopup('<b>{{ $clientMarker->name }}</b>');
+                                @endif
+                            @endif
+                        @endforeach
+                    @endif
                 @else
                     // Show a message if coordinates are not available
                     document.getElementById('map').innerHTML =

@@ -24,13 +24,16 @@ class TransactionRepository extends Controller
      * @param string $year adalah tahun berbentuk angka, contoh : 2019, 2020, 2021 dst..
      * @return Int adalah hasil penghitungan total kolom amount tersebut.
      */
-    public function sumAmount(string $month = null, string $year = null): Int
+   public function sumAmount(string $month = null, string $year = null): int
     {
-        $transaction_amount = $this->model;
+        $transaction_amount = $this->model->where('status', 'Lunas');
 
         return !is_null($month)
-            ? $transaction_amount->where('month', $month)->where('year', date('Y'))->sum('amount')
-            : $transaction_amount->where('year', $year)->sum('amount');
+            ? $transaction_amount->where('month', $month)
+                                ->where('year', date('Y'))
+                                ->sum('amount')
+            : $transaction_amount->where('year', $year)
+                                ->sum('amount');
     }
 
     /**
